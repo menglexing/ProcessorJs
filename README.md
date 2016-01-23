@@ -1,7 +1,4 @@
-# subscribe
-
-js多线程处理器
-
+# js多线程处理器
 
 * 使用示例
 ```javascript
