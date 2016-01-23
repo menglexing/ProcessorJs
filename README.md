@@ -32,4 +32,11 @@ processor.process(function(release, i){
     }, 2000)
 })
 
+输出:
+processor-0: taskA-start
+processor-1: taskB-start
+processor-1: taskB-end
+processor-1: taskC-start
+processor-1: taskC-end
+processor-0: taskA-end
 ```
