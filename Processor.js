@@ -27,7 +27,7 @@
         process: function (task) {
             var self = this;
 
-            task = typeof task === 'function' ? task : function () {};
+            if (typeof task !== 'function') return;
 
             this.tasks.push(task)
             this.loop()

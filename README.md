@@ -5,38 +5,38 @@
 var processor = new Processor(2)
 
 processor.process(function(release, i){
-    console.log('processor-'+ i +': taskA-start')
+    console.log('thread-'+ i +': taskA-start')
 
     setTimeout(function(){
-        console.log('processor-'+ i +': taskA-end')
+        console.log('thread-'+ i +': taskA-end')
         release()
     }, 5000)
 })
 
 processor.process(function(release, i){
-    console.log('processor-'+ i +': taskB-start')
+    console.log('thread-'+ i +': taskB-start')
 
     setTimeout(function(){
-        console.log('processor-'+ i +': taskB-end')
+        console.log('thread-'+ i +': taskB-end')
         release()
     }, 2000)
 })
 
 
 processor.process(function(release, i){
-    console.log('processor-'+ i +': taskC-start')
+    console.log('thread-'+ i +': taskC-start')
 
     setTimeout(function(){
-        console.log('processor-'+ i +': taskC-end')
+        console.log('thread-'+ i +': taskC-end')
         release()
     }, 2000)
 })
 
 输出:
-processor-0: taskA-start
-processor-1: taskB-start
-processor-1: taskB-end
-processor-1: taskC-start
-processor-1: taskC-end
-processor-0: taskA-end
+thread-0: taskA-start
+thread-1: taskB-start
+thread-1: taskB-end
+thread-1: taskC-start
+thread-1: taskC-end
+thread-0: taskA-end
 ```
