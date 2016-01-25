@@ -9,7 +9,7 @@ processor.process(function(release, i){
 
     setTimeout(function(){
         console.log('thread-'+ i +': taskA-end')
-        release()
+        release()    // 释放线程
     }, 5000)
 })
 
@@ -18,7 +18,7 @@ processor.process(function(release, i){
 
     setTimeout(function(){
         console.log('thread-'+ i +': taskB-end')
-        release()
+        release()    // 释放线程
     }, 2000)
 })
 
@@ -28,7 +28,7 @@ processor.process(function(release, i){
 
     setTimeout(function(){
         console.log('thread-'+ i +': taskC-end')
-        release()
+        release()    // 释放线程
     }, 2000)
 })
 
