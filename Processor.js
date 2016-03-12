@@ -18,8 +18,8 @@
         this.tasks = []
         this.threads = []
 
-        while (n--) {
-            this.threads[n] = $.Deferred().resolve(n).promise()
+        for (var i = 0; i < n; i++) {
+            this.threads[i] = $.Deferred().resolve(i).promise()
         }
     }
 
@@ -64,9 +64,11 @@
                         if(self.tasks.length > 0) {
                             var defer = $.Deferred()
                             var release = function () {
-                                defer.resolve(i)
-                                self.locked = false
-                                if (self.tasks.length > 0) self.loop()
+                                setTimeout(function(){    // 防止release在task内部被同步执行
+                                    defer.resolve(i)
+                                    self.locked = false
+                                    if (self.tasks.length > 0) self.loop()
+                                }, 0)
                             }
 
                             self.tasks.shift()(release, i)    // 需要task内部主动释放线程: release()
