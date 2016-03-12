@@ -85,13 +85,12 @@
         },
         indexOfIdle: function () {
             var threads = this.threads
-            var index = -1
 
             for (var i = 0, l = threads.length; i < l; i++) {
                 if (threads[i].state() == 'resolved') return i
             }
 
-            return index
+            return -1
         }
     }
 
