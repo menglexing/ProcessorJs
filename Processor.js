@@ -2,12 +2,12 @@
  * js多线程处理器
  */
 (function (global, factory) {
-    if ( typeof define === 'function') {
-        define(['jquery'], factory)
+    if (typeof define === 'function') {
+        define(factory)
     } else {
-        global.Processor = factory(jQuery)
+        global.Processor = factory()
     }
-}(this, function($){
+}(this, function(){
 
     /**
      * @n {Number} 线程数
@@ -16,11 +16,7 @@
         n = n || 1;
 
         this.tasks = []
-        this.threads = []
-
-        for (var i = 0; i < n; i++) {
-            this.threads[i] = $.Deferred().resolve(i).promise()
-        }
+        this.threads = new Array(n)    // true 表示被占用
     }
 
     Processor.prototype = {
@@ -43,29 +39,21 @@
                 return
             }
 
-            var task = this.tasks.shift()
+            this.threads[index] = true
+            this.tasks.shift()(release, index)    // 需要task内部主动释放线程: release()
 
-            this.threads[index] = this.threads[index].pipe(function(i){    // then
-                var defer = $.Deferred()
-                var release = function () {
-                    defer.resolve(i)
+            function release() {
+                self.threads[index] = false
+                self.locked = false
 
-                    setTimeout(function(){    // 防止release在task内部被同步时导致的不良后果
-                        self.locked = false
-                        if (self.tasks.length > 0) self.loop()
-                    }, 0)
-                }
-
-                task(release, i)
-
-                return defer.promise()
-            })
+                if (self.tasks.length > 0) self.loop()
+            }
         },
         indexOfIdle: function () {
             var threads = this.threads
 
             for (var i = 0, l = threads.length; i < l; i++) {
-                if (threads[i].state() == 'resolved') return i
+                if (!threads[i]) return i
             }
 
             return -1
