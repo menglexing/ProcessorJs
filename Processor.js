@@ -13,51 +13,50 @@
      * @n {Number} 线程数
      */
     function Processor (n) {
-        n = n || 1;
+        var tasks = []
+        var threads = new Array(n)
+        var locked = false
 
-        this.tasks = []
-        this.threads = new Array(n)    // true 表示被占用
-    }
-
-    Processor.prototype = {
-        process: function (task) {
+        function process (task) {
             if (typeof task !== 'function') return;
 
-            this.tasks.push(task)
-            this.loop()
-        },
-        loop: function () {
-            if (this.locked || this.tasks.length == 0) {
+            tasks.push(task)
+            loop()
+        }
+
+        function loop () {
+            if (locked || tasks.length === 0) {
                 return
             }
 
-            var self = this
-            var index = this.indexOfIdle()
+            var index = indexOfIdle()
 
             if (index == -1) {
-                this.locked = true;
+                locked = true;
                 return
             }
 
-            this.threads[index] = true
-            this.tasks.shift()(release, index)    // 需要task内部主动释放线程: release()
+            threads[index] = true    // 标记为忙碌
+            tasks.shift()(release, index)    // 需要task内部主动释放线程: release()
 
             function release() {
-                self.threads[index] = false
-                self.locked = false
+                threads[index] = false
+                locked = false
 
-                if (self.tasks.length > 0) self.loop()
+                loop()
             }
-        },
-        indexOfIdle: function () {
-            var threads = this.threads
+        }
 
+        function indexOfIdle () {
             for (var i = 0, l = threads.length; i < l; i++) {
                 if (!threads[i]) return i
             }
 
             return -1
         }
+
+        // public
+        this.process = process;
     }
 
     return Processor
