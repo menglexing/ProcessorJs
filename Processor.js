@@ -1,5 +1,6 @@
 /*!
  * js多线程处理器
+ * https://github.com/menglexing/ProcessorJs
  */
 (function (global, factory) {
     if (typeof define === 'function') {
@@ -55,8 +56,13 @@
             return -1
         }
 
+        function clear () {
+            tasks = []
+        }
+
         // public
         this.process = process;
+        this.clear = clear;
     }
 
     return Processor
